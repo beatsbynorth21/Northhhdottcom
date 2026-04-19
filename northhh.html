@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NORTHHH | Music Producer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #080808; --surface: #111111; --surface2: #181818;
+      --border: rgba(255,255,255,0.07); --accent: #C8FF00; --accent2: #FF3C00;
+      --white: #F5F5F0; --muted: #666;
+      --display: 'Bebas Neue', sans-serif; --body: 'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: var(--body); font-weight: 300; overflow-x: hidden; cursor: none; }
+    .cursor { position: fixed; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease; mix-blend-mode: difference; }
+    .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(200,255,0,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: transform 0.18s ease, width 0.2s ease, height 0.2s ease, opacity 0.2s ease; }
+    body:hover .cursor { opacity: 1; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E"); opacity: 0.025; pointer-events: none; z-index: 1000; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 24px 48px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); background: rgba(8,8,8,0.6); }
+    .nav-logo { font-family: var(--display); font-size: 28px; letter-spacing: 4px; color: var(--white); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 10px 22px; border: 1px solid var(--accent); color: var(--accent); background: transparent; text-decoration: none; transition: background 0.2s, color 0.2s; }
+    .nav-cta:hover { background: var(--accent); color: var(--black); }
+    #hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 0 48px; position: relative; overflow: hidden; }
+    .hero-bg-text { position: absolute; bottom: -40px; left: -10px; font-family: var(--display); font-size: clamp(120px, 18vw, 240px); color: rgba(255,255,255,0.025); letter-spacing: 10px; user-select: none; pointer-events: none; white-space: nowrap; }
+    .hero-left { padding-top: 80px; position: relative; z-index: 2; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 8px; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; }
+    .hero-tag::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent); }
+    h1 { font-size: clamp(64px, 9vw, 120px); line-height: 0.9; letter-spacing: 2px; margin-bottom: 32px; }
+    h1 .accent-line { color: var(--accent); display: block; }
+    .hero-desc { font-size: 15px; line-height: 1.8; color: var(--muted); max-width: 420px; margin-bottom: 48px; }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary { padding: 14px 32px; background: var(--accent); color: var(--black); font-family: var(--body); font-size: 12px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; border: none; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; display: inline-block; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,255,0,0.3); }
+    .btn-outline { padding: 14px 32px; border: 1px solid var(--border); color: var(--white); font-size: 12px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: border-color 0.2s, color 0.2s; display: inline-block; }
+    .btn-outline:hover { border-color: var(--white); }
+    .hero-right { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-end; padding-top: 80px; }
+    .hero-visual { width: 100%; max-width: 420px; aspect-ratio: 3/4; background: var(--surface); border: 1px solid var(--border); position: relative; overflow: hidden; }
+    .hero-visual::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(200,255,0,0.06) 0%, transparent 50%, rgba(255,60,0,0.04) 100%); }
+    .hero-visual-inner { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+    .vinyl { width: 160px; height: 160px; border-radius: 50%; background: conic-gradient(#1a1a1a 0deg,#2a2a2a 15deg,#111 30deg,#1a1a1a 45deg,#2a2a2a 60deg,#111 75deg,#1a1a1a 90deg,#2a2a2a 105deg,#111 120deg,#1a1a1a 135deg,#2a2a2a 150deg,#111 165deg,#1a1a1a 180deg,#2a2a2a 195deg,#111 210deg,#1a1a1a 225deg,#2a2a2a 240deg,#111 255deg,#1a1a1a 270deg,#2a2a2a 285deg,#111 300deg,#1a1a1a 315deg,#2a2a2a 330deg,#111 345deg,#1a1a1a 360deg); animation: spin 6s linear infinite; position: relative; box-shadow: 0 0 60px rgba(0,0,0,0.8); }
+    .vinyl::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle, var(--accent) 0%, #8aad00 60%, #111 62%); }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .hero-stats { position: absolute; bottom: 28px; left: 28px; display: flex; gap: 24px; }
+    .stat { text-align: left; }
+    .stat-num { font-family: var(--display); font-size: 32px; color: var(--white); letter-spacing: 2px; line-height: 1; }
+    .stat-num span { color: var(--accent); }
+    .stat-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .waveform { position: absolute; top: 28px; right: 28px; display: flex; align-items: center; gap: 3px; height: 32px; }
+    .waveform span { display: block; width: 3px; background: var(--accent); border-radius: 2px; animation: wave 1s ease-in-out infinite alternate; opacity: 0.7; }
+    .waveform span:nth-child(1) { height: 8px; animation-delay: 0s; }
+    .waveform span:nth-child(2) { height: 20px; animation-delay: 0.1s; }
+    .waveform span:nth-child(3) { height: 14px; animation-delay: 0.2s; }
+    .waveform span:nth-child(4) { height: 28px; animation-delay: 0.3s; }
+    .waveform span:nth-child(5) { height: 18px; animation-delay: 0.4s; }
+    .waveform span:nth-child(6) { height: 24px; animation-delay: 0.5s; }
+    .waveform span:nth-child(7) { height: 10px; animation-delay: 0.6s; }
+    .waveform span:nth-child(8) { height: 22px; animation-delay: 0.7s; }
+    .waveform span:nth-child(9) { height: 16px; animation-delay: 0.8s; }
+    .waveform span:nth-child(10) { height: 6px; animation-delay: 0.9s; }
+    @keyframes wave { from { transform: scaleY(1); } to { transform: scaleY(0.4); } }
+    .ticker { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 14px 0; background: var(--surface); }
+    .ticker-inner { display: flex; gap: 0; animation: ticker 18s linear infinite; white-space: nowrap; }
+    .ticker-item { font-family: var(--display); font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); padding: 0 36px; flex-shrink: 0; }
+    .ticker-item .dot { color: var(--accent); margin: 0 12px; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    section { position: relative; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+    .section-label { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .section-title { font-family: var(--display); font-size: clamp(42px, 6vw, 72px); letter-spacing: 4px; line-height: 1; margin-bottom: 60px; }
+    #about { padding: 120px 0; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .about-text p { font-size: 15px; line-height: 1.9; color: #999; margin-bottom: 20px; }
+    .about-text p strong { color: var(--white); font-weight: 500; }
+    .about-skills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+    .skill-tag { padding: 6px 16px; border: 1px solid var(--border); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); transition: border-color 0.2s, color 0.2s; }
+    .skill-tag:hover { border-color: var(--accent); color: var(--accent); }
+    .about-cards { display: flex; flex-direction: column; gap: 16px; }
+    .about-card { background: var(--surface); border: 1px solid var(--border); padding: 28px 32px; display: flex; align-items: flex-start; gap: 20px; transition: border-color 0.2s, transform 0.2s; }
+    .about-card:hover { border-color: rgba(200,255,0,0.2); transform: translateX(4px); }
+    .card-icon { font-size: 28px; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+    .card-title { font-size: 13px; font-weight: 500; letter-spacing: 1px; margin-bottom: 6px; color: var(--white); }
+    .card-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    #listen { padding: 120px 0; background: var(--surface); }
+    #listen::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.3; }
+    .player-card { background: var(--black); border: 1px solid var(--border); overflow: hidden; }
+    .player-header { padding: 24px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .player-title { font-size: 13px; letter-spacing: 1px; color: var(--muted); }
+    .player-live { display: flex; align-items: center; gap: 8px; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+    .player-embed { display: block; width: 100%; }
+    .player-embed iframe { display: block; width: 100%; border: none; }
+    .player-footer { padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); }
+    .player-note { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+    .soundcloud-link { font-size: 11px; color: var(--accent); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; }
+    .soundcloud-link:hover { text-decoration: underline; }
+    #connect { padding: 120px 0; }
+    .platforms-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); overflow: hidden; }
+    .platform-card { background: var(--black); padding: 48px 32px; text-decoration: none; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; transition: background 0.25s; position: relative; overflow: hidden; }
+    .platform-card::after { content: ''; position: absolute; bottom: 0; left: 0; height: 2px; width: 0; background: var(--accent); transition: width 0.3s ease; }
+    .platform-card:hover { background: var(--surface2); }
+    .platform-card:hover::after { width: 100%; }
+    .platform-icon { font-size: 28px; }
+    .platform-name { font-family: var(--display); font-size: 22px; letter-spacing: 3px; color: var(--white); }
+    .platform-handle { font-size: 12px; color: var(--muted); }
+    .platform-arrow { margin-top: auto; font-size: 20px; color: var(--muted); transition: color 0.2s, transform 0.2s; }
+    .platform-card:hover .platform-arrow { color: var(--accent); transform: translate(4px, -4px); }
+    #vibe { padding: 80px 0; border-top: 1px solid var(--border); }
+    .vibe-inner { display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+    .vibe-text h3 { font-family: var(--display); font-size: 32px; letter-spacing: 3px; margin-bottom: 8px; }
+    .vibe-text p { font-size: 13px; color: var(--muted); }
+    .music-toggle { display: flex; align-items: center; gap: 16px; cursor: none; }
+    .toggle-btn { width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: none; transition: border-color 0.2s, background 0.2s; font-size: 20px; }
+    .toggle-btn:hover, .toggle-btn.playing { border-color: var(--accent); background: rgba(200,255,0,0.08); }
+    .toggle-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+    footer { padding: 40px 48px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { font-family: var(--display); font-size: 22px; letter-spacing: 4px; color: var(--muted); }
+    .footer-logo span { color: var(--accent); }
+    .footer-copy { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      #hero { grid-template-columns: 1fr; padding: 0 24px; text-align: center; }
+      .hero-right { display: none; }
+      .hero-desc { max-width: 100%; }
+      .hero-btns { justify-content: center; }
+      .container { padding: 0 24px; }
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .platforms-grid { grid-template-columns: 1fr 1fr; }
+      footer { padding: 32px 24px; }
+    }
+    @media (max-width: 480px) {
+      .platforms-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">NORTH<span>HH</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#listen">Listen</a></li>
+      <li><a href="#connect">Connect</a></li>
+    </ul>
+    <a class="nav-cta" href="#connect">Book Now</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg-text">BEATS</div>
+    <div class="hero-left">
+      <div class="hero-tag">Available for Features</div>
+      <h1>
+        ✞ 𝗡𝗼𝗿𝘁𝗵
+        <span class="accent-line">𝗵𝗵 ✞</span>
+      </h1>
+      <p class="hero-desc">
+        Crafting hard, emotional, and industry-ready sounds.
+        Beats that move rooms — from dark trap to melodic fire.
+        If you're serious about your sound, you found your producer.
+      </p>
+      <div class="hero-btns">
+        <a class="btn-primary" href="#listen">Hear the Work</a>
+        <a class="btn-outline" href="#connect">Get in Touch</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-visual">
+        <div class="hero-visual-inner">
+          <div class="vinyl"></div>
+        </div>
+        <div class="waveform">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-num">50<span>+</span></div>
+            <div class="stat-label">Beats Made</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">3<span>+</span></div>
+            <div class="stat-label">Years Active</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-inner">
+      <span class="ticker-item">Custom Beats <span class="dot">◆</span></span>
+      <span class="ticker-item">Trap <span class="dot">◆</span></span>
+      <span class="ticker-item">Melodic <span class="dot">◆</span></span>
+      <span class="ticker-item">Artist Features <span class="dot">◆</span></span>
+      <span class="ticker-item">Exclusive Licenses <span class="dot">◆</span></span>
+      <span class="ticker-item">Afrobeats <span class="dot">◆</span></span>
+      <span class="ticker-item">Drill <span class="dot">◆</span></span>
+      <span class="ticker-item">Industry-Ready <span class="dot">◆</span></span>
+      <span class="ticker-item">Custom Beats <span class="dot">◆</span></span>
+      <span class="ticker-item">Trap <span class="dot">◆</span></span>
+      <span class="ticker-item">Melodic <span class="dot">◆</span></span>
+      <span class="ticker-item">Artist Features <span class="dot">◆</span></span>
+      <span class="ticker-item">Exclusive Licenses <span class="dot">◆</span></span>
+      <span class="ticker-item">Afrobeats <span class="dot">◆</span></span>
+      <span class="ticker-item">Drill <span class="dot">◆</span></span>
+      <span class="ticker-item">Industry-Ready <span class="dot">◆</span></span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid fade-in">
+        <div class="about-text">
+          <div class="section-label">About</div>
+          <h2 class="section-title">THE<br>SOUND</h2>
+          <p>I'm <strong>Northhh</strong> — a producer who builds sounds from the ground up. Every beat is engineered to carry emotion, energy, and purpose.</p>
+          <p>Whether you need something that hits in the clubs or cuts deep on a late-night session, I create music that <strong>fits your identity</strong> — not just a trend.</p>
+          <div class="about-skills">
+            <span class="skill-tag">Trap</span>
+            <span class="skill-tag">Melodic</span>
+            <span class="skill-tag">Drill</span>
+            <span class="skill-tag">Afrobeats</span>
+            <span class="skill-tag">R&amp;B</span>
+            <span class="skill-tag">Dark Wave</span>
+          </div>
+        </div>
+        <div class="about-cards">
+          <div class="about-card">
+            <div class="card-icon">🎧</div>
+            <div>
+              <div class="card-title">Custom Beat Production</div>
+              <div class="card-desc">Beats built around your vision — your sound, your direction, your identity.</div>
+            </div>
+          </div>
+          <div class="about-card">
+            <div class="card-icon">🔥</div>
+            <div>
+              <div class="card-title">Lease &amp; Exclusive Beats</div>
+              <div class="card-desc">Browse ready-made catalog or lock in full exclusivity. Flexible pricing available.</div>
+            </div>
+          </div>
+          <div class="about-card">
+            <div class="card-icon">🎤</div>
+            <div>
+              <div class="card-title">Artist Collaboration</div>
+              <div class="card-desc">I work closely with serious artists to craft projects that last — from singles to full EPs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LISTEN -->
+  <section id="listen">
+    <div class="container">
+      <div class="fade-in">
+        <div class="section-label">Music</div>
+        <h2 class="section-title">LISTEN</h2>
+        <div class="player-card">
+          <div class="player-header">
+            <span class="player-title">Latest Tracks — Audiomack</span>
+            <span class="player-live"><span class="live-dot"></span>Streaming</span>
+          </div>
+          <div class="player-embed">
+            <iframe
+              src="https://audiomack.com/embed/northhh"
+              width="100%"
+              height="300"
+              frameborder="0"
+              scrolling="no"
+              allow="autoplay">
+            </iframe>
+          </div>
+          <div class="player-footer">
+            <span class="player-note">Stream on Audiomack</span>
+            <a class="soundcloud-link" href="https://audiomack.com/northhh" target="_blank" rel="noopener">Open Audiomack ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONNECT -->
+  <section id="connect">
+    <div class="container">
+      <div class="fade-in">
+        <div class="section-label">Platforms</div>
+        <h2 class="section-title">FIND ME</h2>
+        <div class="platforms-grid">
+
+          <a class="platform-card" href="https://audiomack.com/northhh" target="_blank" rel="noopener">
+            <div class="platform-icon">🎵</div>
+            <div class="platform-name">AUDIOMACK</div>
+            <div class="platform-handle">@northhh</div>
+            <div class="platform-arrow">↗</div>
+          </a>
+
+          <a class="platform-card" href="https://www.tiktok.com/@northhh_zzz" target="_blank" rel="noopener">
+            <div class="platform-icon">🎬</div>
+            <div class="platform-name">TIKTOK</div>
+            <div class="platform-handle">@northhh_zzz</div>
+            <div class="platform-arrow">↗</div>
+          </a>
+
+          <a class="platform-card" href="https://x.com/Beatsbynorthhh" target="_blank" rel="noopener">
+            <div class="platform-icon">𝕏</div>
+            <div class="platform-name">X / TWITTER</div>
+            <div class="platform-handle">@Beatsbynorthhh</div>
+            <div class="platform-arrow">↗</div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BACKGROUND VIBE -->
+  <section id="vibe">
+    <div class="container">
+      <div class="vibe-inner fade-in">
+        <div class="vibe-text">
+          <h3>BACKGROUND VIBE</h3>
+          <p>Set the mood. Play a beat while you browse.</p>
+        </div>
+        <div class="music-toggle">
+          <audio id="bg-music" loop>
+            <source src="your-beat.mp3" type="audio/mpeg">
+          </audio>
+          <button class="toggle-btn" id="toggleBtn" onclick="toggleMusic()" title="Toggle background music">
+            <span id="musicIcon">▶</span>
+          </button>
+          <span class="toggle-label" id="toggleLabel">Play Beat</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">NORTH<span>HH</span></div>
+    <div class="footer-copy">© 2025 Northhh. All rights reserved.</div>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursorRing');
+    let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX; mouseY = e.clientY;
+      cursor.style.left = mouseX + 'px';
+      cursor.style.top = mouseY + 'px';
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      cursorRing.style.left = ringX + 'px';
+      cursorRing.style.top = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '20px'; cursor.style.height = '20px';
+        cursorRing.style.width = '56px'; cursorRing.style.height = '56px';
+        cursorRing.style.opacity = '0.3';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '10px'; cursor.style.height = '10px';
+        cursorRing.style.width = '36px'; cursorRing.style.height = '36px';
+        cursorRing.style.opacity = '1';
+      });
+    });
+
+    function toggleMusic() {
+      const music = document.getElementById('bg-music');
+      const btn = document.getElementById('toggleBtn');
+      const icon = document.getElementById('musicIcon');
+      const label = document.getElementById('toggleLabel');
+      if (music.paused) {
+        music.play().then(() => {
+          btn.classList.add('playing');
+          icon.textContent = '⏸';
+          label.textContent = 'Pause Beat';
+        }).catch(() => {
+          label.textContent = 'Add your beat file';
+        });
+      } else {
+        music.pause();
+        btn.classList.remove('playing');
+        icon.textContent = '▶';
+        label.textContent = 'Play Beat';
+      }
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
